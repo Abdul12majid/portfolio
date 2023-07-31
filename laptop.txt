@@ -1,0 +1,46 @@
+Laptop 11
+ASUS VivoBook 15 F515 Thin and Light Laptop, 15.6” FHD Display, Intel Core i3-1005G1 Processor, Fingerprint Reader, Backlit Keyboard, Windows 10 Home, Slate Grey (20GB RAM | 1TB SSD)
+
+https://amzn.to/3DezJad
+
+Laptop 22
+Lenovo IdeaPad, 20GB RAM, 1TB SSD, AMD Dual-core Processor, 15.6 Inch HD Anti-Glare Display, Long Battery Life Up to 9.5Hr, HDMI, SD Card Reader, Windows 11, 1 Year Microsoft 365
+
+https://amzn.to/44qWh3o
+
+Laptop 33
+SGIN 17 Inch Laptop, Windows 11 Laptops with IPS Display, 4GB RAM 128GB SSD Computer, Intel Celeron Quad Core J4105(Up to 2.5 GHz), Mini HDMI, Webcam, Dual Wi-Fi, 512GB Expansion
+
+https://amzn.to/44HITI4
+
+Laptop 55
+ANMESC Laptop, 15.6" 1080P Full HD Display High Performance Quad-Core Intel Celeron N5095 Processors 12GB DDR4 512GB SSD Windows 11 Laptop Computers, 2.4G/5G WiFi, Bluetooth 4.2, Long Battery Life
+
+https://amzn.to/46Q1uTZ
+
+Laptop66
+Acer 2022 Chromebook 315 15.6" Full HD 1080p IPS Touchscreen Laptop PC, Intel Celeron N4020 Dual-Core Processor, 4GB DDR4 RAM, 64GB eMMC, Webcam, WiFi, 12 Hrs Battery Life, Chrome OS, Silver
+
+https://amzn.to/44tRzSO
+
+Laptop77
+Acer Aspire 3 A315-24P-R7VH Slim Laptop | 15.6" Full HD IPS Display | AMD Ryzen 3 7320U Quad-Core Processor | AMD Radeon Graphics | 8GB LPDDR5 | 128GB NVMe SSD | Wi-Fi 6 | Windows 11 Home in S Mode
+
+https://amzn.to/3XUT7mn
+
+
+<script type="text/javascript">
+amzn_assoc_placement = "adunit0";
+amzn_assoc_search_bar = "true";
+amzn_assoc_tracking_id = "7038610584-20";
+amzn_assoc_search_bar_position = "bottom";
+amzn_assoc_ad_mode = "search";
+amzn_assoc_ad_type = "smart";
+amzn_assoc_marketplace = "amazon";
+amzn_assoc_region = "US";
+amzn_assoc_title = "Shop Related Products";
+amzn_assoc_default_search_phrase = "";
+amzn_assoc_default_category = "All";
+amzn_assoc_linkid = "04e30e6d82be3b67dc753882c13b8d04";
+</script>
+<script src="//z-na.amazon-adsystem.com/widgets/onejs?MarketPlace=US"></script>

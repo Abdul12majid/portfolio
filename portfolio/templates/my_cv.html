@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+MY CV
+{% endblock %}
+
+{% block message %}
+
+{{ message }}
+
+{% endblock %}
+
+
+{% block content %}
+</br></br>
+<center>
+	<h4>Abdul Majid</h4>
+	<h2> Software Developer </h2>
+	<p>github/xxxxxxxxxxx | yisaabdulmajid@gmail.com | +2349049714771 | Remote, Nigeria</p>
+</center>
+
+<u><b>Techincal Skills</b></u></br>
+<p>HTML, CSS, Python, Django, Flask, FastApi, Selenium, Java, Basic Javascript, Git/Github, Linux, MySQL, Postgres, Sqlite, Script writing.</p></br>
+
+<u><b>Soft Skills</b></u></br>
+<p>Clear communication, Public Speaking, Time Management Skills, Analytical & Critical thinking, Ability to work in teams 
+and independently, Leadership & Team management skills, Ease and speed of learning new tools and languages</p>
+
+
+<u><b>Education</b></u></br>
+
+<p><ul>
+	<li>
+		University of Ilorin, Nigeria(2019-2024)
+Computer Science</br>
+Courses taken – Data Structures & Algorithms, Computer Architecture, System Programming, Internet Technology, Logic Programming, 
+Digital Designs & Microprocessors, C programming, Java Programming, etc. </br>
+Volunteer - Darewood Students Mentor Association
+- National Association of Computing Science Students(NACOS) Sports Committee.
+	</li>
+</ul>
+
+<u><b>Interests</b></u></br>
+<p>Watching football, Playing games, Writing Scripts, Listening to music.</p>
+
+<u><b>Languages</b></u></br>
+
+<p>English, Arabic</p>
+
+<center>
+	<a href="{% static 'portfolio/scss/cvvv.pdf' %}" class="btn btn-outline-danger" download="my_cv.pdf"><i class="icon-down-circled2 "></i>-----</a>
+</center>
+
+
+
+
+
+
+
+
+{% endblock %}

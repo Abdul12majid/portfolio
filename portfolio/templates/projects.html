@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Projects
+{% endblock %}
+
+{% block content %}
+
+{% load static %}
+ <section class="section" id="blog">
+        <div class="container">
+            <h2 class="mb-5">My <span class="text-danger">Projects</span></h2>
+            <div class="row">
+                <div class="blog-card">
+                    <div class="img-holder">
+                        <img src="{% static 'portfolio/imgs/amazon.jpeg' %}" alt="">
+                    </div>
+                    <div class="content-holder">
+                        <h6 class="title">Amazon Affiliate Program</h6>
+                        
+                        <p>Amazon does an afiiliate program where customers can buy goods not only through them but from other people called affiliates as well. All one needs to do is register as an affiliate under them and folllow the necessary steps to verify their account. After the verification of one's account and personal setup, one becomes a successful affiliate under Amazon. An Amazon affiliate gets some certain commission when a customer buys an Amazon product through them.</p>
+
+                        <p><b>This little project is centered around that. Using HTML, CSS, Bootstrap5 and Django, i was able to build a fully fuctional amazon-affiliate website.</b> </p></br>
+
+                        <b><center><p> View the source code <a href="https://github.com/Abdul12majid/amazon_affiliate_program.git">here</a></p></center></b>
+                    </div>
+                </div><!-- end of blog wrapper -->
+
+                <!-- blog-card -->
+                <div class="blog-card">
+                    <div class="img-holder">
+                        <img src="{% static 'portfolio/imgs/blog2.jpg' %}" alt="">
+                    </div>
+                    <div class="content-holder">
+                        <h6 class="title">Flask Market</h6>
+
+                        <p>Using Bootstrap5, Python, Flask and Sqlite3, i was able to develop a mini-ecommerce website that imitates the real world transactions.</p></br>
+
+                        <b><center><p> View the source code <a href="https://github.com/Abdul12majid/flask-market.git">here</a></p></center></b>
+                    </div>
+                </div><!-- end of blog wrapper -->
+                <!-- blog-card -->
+                <div class="blog-card">
+                    <div class="img-holder">
+                        <img src="{% static 'portfolio/imgs/university.jpg' %}" alt="">
+                    </div>
+                    <div class="content-holder">
+                        <h4 class="title">University Registration</h4>
+
+                        <p> A mock university website that accepts student information and submit to a database. This website was a school projects and i teamed up with a colleague who used HTML, CSS and Javascript for the front-end while i used Python and Flask for the back-end design.</p></br>
+
+                        <b><center><p> View the source code <a href="https://github.com/Abdul12majid/school_project_university_website.git">here</a></p></center></b>
+                    </div>
+                </div><!-- end of blog wrapper -->
+                <div class="blog-card">
+                    <div class="img-holder">
+                        <img src="{% static 'portfolio/imgs/dental.jpeg' %}" alt="">
+                    </div>
+                    <div class="content-holder">
+                        <h4 class="title">Dental Hospital Website</h4>
+
+                        <p>A fully fuctional dental website which has the following features:</p>
+                            <ul>
+                                <li>User registration and authentication</li>
+                                <li>User ability to make dental appointments</li>
+                                <li>Approval of appointment by the Dentist</li>
+                                <li>Smooth UI/UX interface</li>
+                            </ul>
+
+                        <p> Using HTML, CSS, Javascript, Python, Django and Postgres, i was able to build this website.</p></br>
+
+                        <b><center><p> View the source code <a href="https://github.com/Abdul12majid/dentist_website.git">here</a></p></center></b>
+                    </div>
+                </div><!-- end of blog wrapper -->
+                <div class="blog-card">
+                    <div class="img-holder">
+                        <img src="{% static 'portfolio/imgs/inventory.jpg' %}" alt="">
+                    </div>
+                <div class="content-holder">
+                        <h4 class="title">Market Inventory</h4>
+
+                        <p>A fully fuctional online inventory website which has the following features:</p>
+                            <ul>
+                                <li>User registration and authentication</li>
+                                <li>Add and Delete Product</li>
+                                <li>Update product details</li>
+                                <li>Stock and Restock</li>
+                                <li>Smooth UI/UX interface</li>
+                            </ul>
+
+                        <p> Using HTML, CSS, Javascript, Python, Django, i was able to build this website.</p></br>
+
+                        <b><center><p> View the source code <a href="https://github.com/Abdul12majid/inventory.git">here</a></p></center></b>
+                    </div>
+                </div><!-- end of blog wrapper -->
+
+            </div></br></br>
+            <center>
+    <a href="{% url 'contact-me' %}" class="btn btn-outline-danger"><i class="icon-down-circled2 "></i>Hire Me</a>
+           </center>
+
+        </div>
+    </section>
+{% endblock %}
