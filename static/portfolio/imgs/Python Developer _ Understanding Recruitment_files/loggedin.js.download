@@ -1,0 +1,91 @@
+//Account Login - All pages
+$(".ajax-login").each(function() {
+    $(this).html('<i class="fas fa-spinner fa-spin"></i>');
+});
+
+$.subscribe('ajax-login', function(args) {
+    $(".ajax-login").each(function() {
+        var $this = $(this);
+        var dashboardLink = $(this).attr('data-loginurl');
+        var candidateLink = $(this).attr('data-candidateLink');
+        if(args.response) {
+            if(args.response.isLoggedIn) {
+                var image_available = true;
+                if(args.response.image === ""){
+                    image_available = false;
+                } else if(args.response.image === null){
+                    image_available = false;
+                }
+                $('.ajax-loggedin-name').text(args.response.firstName + " " + args.response.lastName);
+                if(candidateLink === undefined){
+                    $('.ajax-loggedin-dashboardUrl').attr('href', args.response.dashboardUrl)
+                } else{
+                    $('.ajax-loggedin-dashboardUrl').attr('href', candidateLink)
+                }
+                if(image_available === true){
+                    $('.ajax-loggedin-image').attr('src', args.response.image);
+                } else{
+                    $('.ajax-loggedin-image').remove();
+                }
+                $('.ajax-loggedin-initials').attr('data-initials', args.response.firstName.slice(0, 1) + "" + args.response.lastName.slice(0,1))
+                $('.signed-in-bar').show();
+                $('.ajax-login').remove();
+
+                if($('.icons-in-top').length > 0){
+                    $('.icons-in-top').each(function(){
+                        $(this).show();
+                    })
+                }
+            } else {
+                var dashboardtext_availiablity = $('.ajax-login').attr('data-dashboardtext');
+
+                if(dashboardtext_availiablity != undefined){
+                    if(dashboardtext_availiablity !== ""){
+                        $this.html('<a href="'+ args.response.loginUrl +'">\
+                                    <span>'
+                                        +dashboardtext_availiablity+
+                                    '</span>\
+                                </a>');
+                    } else{
+                        $this.html('<a href="'+ args.response.loginUrl +'">\
+                                <span>\
+                                    <i class="fas fa-user-circle"></i>\
+                                    <div class="tooltip">\
+                                        Sign in\
+                                    </div>\
+                                </span>\
+                            </a>');
+                    }
+                } else{
+                    if(dashboardLink == undefined){
+                        $this.html('<a href="'+ args.response.loginUrl +'">\
+                                    <span>\
+                                        <i class="fas fa-user-circle"></i>\
+                                        <div class="tooltip">\
+                                            Sign in\
+                                        </div>\
+                                    </span>\
+                                </a>');
+                    } else{
+                        $this.html('<a href="'+ dashboardLink +'">\
+                                    <span>\
+                                        <i class="fas fa-user-circle"></i>\
+                                        <div class="tooltip">\
+                                            Sign in\
+                                        </div>\
+                                    </span>\
+                                </a>');
+                    }
+                }
+            }   
+        } else {
+            $this.html('<i class="fas fa-exclamation-triangle"></i>')
+        }
+    });
+});
+
+$.subscribe('ajax-login-error', function(args) {
+    $(".ajax-login").each(function() {
+        $(this).html('<i class="fas fa-exclamation-triangle"></i>');
+    });
+});

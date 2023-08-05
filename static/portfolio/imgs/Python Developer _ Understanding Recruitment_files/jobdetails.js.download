@@ -1,0 +1,102 @@
+$.subscribe('ajax-login', function(args) {
+    if(args.response){
+        if(args.response.isLoggedIn){
+            $('#accountLinks').remove();
+        }
+    }
+
+    //bookmark
+    if(args.response) {
+        if(args.response.isLoggedIn) {
+            var slugs = [];
+            $(".ajax-bookmark-container").each(function (e) {
+                var slug = $(this).data("slug");
+                if(slug) {
+                    slugs.push(slug);
+                }
+            });
+            if(slugs.length > 0) {
+                $.post("/candidate/arebookmarked/", { 'jobSlugs': slugs }, function (areBookmarkedResponse) {
+                    $(".ajax-bookmark-container").each(function (e) {
+                        var $container = $(this),
+                            $content = $container.find(".ajax-bookmark-content"),
+                            bookmarkedHtml = $container.find(".bookmark-content").html(),
+                            unBookmarkedHtml = $container.find(".unbookmark-content").html(),
+                            spinner = ' <i class="fas fa-circle-notch fa-spin"></i>',
+                            slug = $container.data("slug");
+                        $content.html(areBookmarkedResponse[slug] ? unBookmarkedHtml: bookmarkedHtml);
+                        $container.on("click", ".add-to-shortlist", function (e) {
+                            e.preventDefault();
+                            var $this = $(this);
+                            $this.append(spinner);
+                            if(!$this.hasClass("added")) {
+                                $.post("/candidate/bookmark/" + slug + "/", function () {
+                                    $content.html(unBookmarkedHtml);
+                                    $this.find("i").remove();
+                                });
+                            } else {
+                                $.post("/candidate/unbookmark/" + slug + "/", function () {
+                                    $content.html(bookmarkedHtml);
+                                    $this.find("i").remove();
+                                });
+                            }
+                        });
+                    });
+                });
+                
+                
+            }
+        }
+    }
+    
+    //Has applied to
+    if(args.response) {
+        if(args.response.isLoggedIn) {
+            var slugs = [];
+            $(".ajax-bookmark-container").each(function (e) {
+                var slug = $(this).data("slug");
+                if(slug) {
+                    slugs.push(slug);
+                }
+            });
+            if(slugs.length > 0) {
+                $.post("/candidate/wereappliedto/", { 'jobSlugs': slugs }, function (hasAppliedToResponse) {
+                    
+                        $(".ajax-appliedto-container").each(function (e) {
+                            var $container = $(this),
+                                spinner = ' <i class="fas fa-circle-notch fa-spin"></i>',
+                                slug = slugs[0];
+                                $container.find(".ajax-appliedto-content").html(
+                                    hasAppliedToResponse[slug] ? $container.find(".appliedto-content").html() : 
+                                                               $container.find(".notappliedto-content").html(),
+
+                                    hasAppliedToResponse[slug] ? $('#formhelper_jobapp14').remove() : 
+                                                                $('#formhelper_jobapp14').show(), 
+
+                                    hasAppliedToResponse[slug] ? $(".ajax-appliedto-container").show() : $(".ajax-appliedto-container").hide(),                                           
+                                );
+
+                            
+                            $(".ajax-appliedtobtn-content").html(
+                                hasAppliedToResponse[slug] ? $(".appliedtobtn-content").html() : 
+                                $(".notappliedtobtn-content").html(),                                
+                            );
+                            
+                        });
+                        vsmsite.vsmscrollTo();
+                    
+                });
+            }
+        } else{
+            if($('.vsm-job-details').length > 0){
+                $(".ajax-appliedtobtn-content").each(function (e) {
+                    var $container = $(this);
+                    
+                    $container.html($(".notappliedtobtn-content").html());
+                    
+                });
+                vsmsite.vsmscrollTo();
+            }
+        }
+    }
+});

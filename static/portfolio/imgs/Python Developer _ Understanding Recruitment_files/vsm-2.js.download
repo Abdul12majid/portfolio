@@ -1,0 +1,1353 @@
+var vsmsite = (function (window, undefined) {
+  /*
+  --------------------------------------------------------
+  SCROLL UP
+  ========================================================
+  How to call:
+  --------------------------------------------------------
+  Add class 'back-to-top' to an element
+  --------------------------------------------------------
+  */
+  function vsmscrollUp() {
+    if ($('.back-to-top').length) {
+      var scrollTrigger = 10, // px
+        backToTop = function () {
+          var scrollTop = $(window).scrollTop();
+          if (scrollTop > scrollTrigger) {
+            $('.back-to-top').addClass('show');
+            $('.vsm-top').addClass('fixed');
+          } else {
+            $('.back-to-top').removeClass('show');
+            $('.vsm-top').removeClass('fixed');
+          }
+        };
+      backToTop();
+      $(document).on('scroll', function () {
+        backToTop();
+      });
+      $('.back-to-top').on('click', function (e) {
+        e.preventDefault();
+        $('html,body').animate({
+          scrollTop: 0
+        }, 700);
+      });
+    }
+  }
+  /*
+  --------------------------------------------------------
+  SCROLL TO
+  ========================================================
+  How to call:
+  --------------------------------------------------------
+  Link must have data attribute -> [data-to='name-of-section']
+  Section must have data attribute -> [data-section='name-of-section']
+  --------------------------------------------------------
+  */
+  function vsmscrollTo() {
+    $('[data-to]').on('click', function (e) {
+      // e.preventDefault();
+      var navHeight = $('.vsm-top').outerHeight();
+      var url = $(this).attr('href');
+      const [hash, query] = url.split('#')[1].split('=');
+      var urlHash = hash;
+      if ($(this).attr("href").indexOf("#") > -1) {
+        try {
+
+          $('html,body').animate({
+            scrollTop: $("[data-section=" + urlHash + "]").offset().top - navHeight
+          }, 10);
+        } catch (err) {
+          $('html,body').animate({
+            scrollTop: $("#" + urlHash).offset().top - navHeight
+          }, 10);
+        }
+      }
+    });
+    $(document).ready(function () {
+      if (window.location.hash.length > 0) {
+        const [hash, query] = window.location.hash.split('#')[1].split('=');
+        var urlHash = hash;
+        var navHeight = $('.vsm-top').outerHeight();
+        setTimeout(function () {
+          if (window.location.href.indexOf("#") > -1) {
+            try {
+
+              $('html,body').animate({
+                scrollTop: $("[data-section=" + urlHash + "]").offset().top - navHeight
+              }, 10);
+
+            } catch (err) {
+
+              $('html,body').animate({
+                scrollTop: $("#" + urlHash).offset().top - navHeight
+              }, 10);
+
+            }
+          }
+        }, 700)
+      } else {
+        console.log('none')
+      }
+    })
+  }
+  /*
+  --------------------------------------------------------
+  Lax Scroll js
+  ========================================================
+  */
+  function vsmlaxScroll() {
+    if ($('.lax').length) {
+      window.onload = function () {
+        lax.init();
+        // Add a driver that we use to control our animations
+        lax.addDriver('scrollY', function () {
+          return window.scrollY;
+        });
+        // Add animation bindings to elements
+        lax.addElements('.laxTranslateYDown', {
+          scrollY: {
+            translateY: [
+              ["elInY", "elCenterY", "elOutY"],
+              [-80, 0, 0],
+            ],
+          }
+        });
+        lax.addElements('.laxTranslateYUp', {
+          scrollY: {
+            translateY: [
+              ["elInY", "elCenterY", "elOutY"],
+              [80, 0, 0],
+            ],
+          }
+        });
+        lax.addElements('.laxScale', {
+          scrollY: {
+            scale: [
+              ["elInY", "elOutY"],
+              [1.2, 1],
+            ]
+          }
+        });
+        lax.addElements('.laxFadeIn', {
+          scrollY: {
+            opacity: [
+              [0, 100],
+              [0, 1],
+            ]
+          }
+        });
+      };
+    }
+  }
+  /*
+  --------------------------------------------------------
+  Swiper js
+  ========================================================
+  */
+
+function waitForElm(selector) {
+    return new Promise(resolve => {
+        if (document.querySelector(selector)) {
+            return resolve(document.querySelector(selector));
+        }
+
+        const observer = new MutationObserver(mutations => {
+            if (document.querySelector(selector)) {
+                resolve(document.querySelector(selector));
+                observer.disconnect();
+            }
+        });
+
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    });
+}
+  function destroySwipers(m, s) {
+    var moduleClassName = m + " ";
+    var swiperContainerClass = s;
+    setTimeout(function () {
+      $(moduleClassName + swiperContainerClass).each(function () {
+        this.swiper.destroy();
+        console.log('destroyed:' + moduleClassName + swiperContainerClass)
+      })
+    }, 1000)
+  }
+
+  function vsmTimelineHozSwipers(r, m, s, n) {
+    setTimeout(function () {
+      // Swiper module name
+      // var moduleClassName = "div[data-section]"+" ";// Leave as global or specific module class name
+      // var swiperContainerClass = ".swiper-container";
+      var moduleClassName = m + " ";
+      var swiperContainerClass = s;
+      var swiperContainerClass2 = ".timeline-control.swiper-container";
+      var destroySwiper = r;
+      let componentWrapper = swiperContainerClass.replace(".swiper-container", "").replace(/[.]+/g, "-").substring(1);
+      let outerContainer = swiperContainerClass.replace(/[.]+/g, "-").substring(1);
+      let componentWrapper2 = swiperContainerClass2.replace(".swiper-container", "").replace(/[.]+/g, "-").substring(1);
+      let outerContainer2 = swiperContainerClass2.replace(/[.]+/g, "-").substring(1);
+      // Destroy swipers
+      if (destroySwiper === "update") {
+        $(moduleClassName + swiperContainerClass).each(function () {
+          this.swiper.destroy();
+        })
+        $(moduleClassName + swiperContainerClass2).each(function () {
+          this.swiper.destroy();
+        })
+      }
+      // Setup new swipers
+      const swiperCarousels = document.querySelectorAll(moduleClassName + swiperContainerClass);
+      swiperCarousels.forEach((carouselContainer, index) => {
+        if ($(carouselContainer).closest(moduleClassName).find(swiperContainerClass).data('slide-options')) {
+          var slideoptions = $(carouselContainer).closest(moduleClassName).find(swiperContainerClass).data('slide-options');
+        } else {
+          var slideoptions = ['false', 'false']
+        }
+        var params = n;
+        const bullet = $(carouselContainer).closest(moduleClassName).find(".swiper-slide").map(function () {
+          return this.dataset.name;
+        }).get();
+        const carouselPagination = carouselContainer.closest(moduleClassName).querySelector(
+          ".swiper-pagination"
+        );
+        const carouselPrevButton =
+          carouselContainer.closest(moduleClassName).querySelector(
+            ".swiper-button-prev"
+          );
+        const carouselNextButton =
+          carouselContainer.closest(moduleClassName).querySelector(
+            ".swiper-button-next"
+          );
+        carouselContainer.closest(moduleClassName).querySelector(
+          ".component-wrapper"
+        ).classList.add('outer-' + componentWrapper + "-" + index)
+        carouselContainer.closest(moduleClassName).querySelector(
+          swiperContainerClass
+        ).classList.add(outerContainer + "-" + index)
+        // init new swiper
+        const controller = carouselContainer.closest(moduleClassName).querySelector(".timeline-control");
+        var swiperInstance2 = new Swiper(controller,
+          {
+            slidesPerView: 2,
+            spaceBetween: 0,
+            loop: false,
+            freeMode: true,
+            centeredSlides: false,
+            updateOnImagesReady: true,
+            preloadImages: false,
+            lazyLoading: true,
+            watchSlidesVisibility: true,
+            watchSlidesProgress: true,
+            allowTouchMove: true,
+            breakpoints: {
+              320: {
+                slidesPerView: 1,
+              },
+              768: {
+                slidesPerView: 2,
+              },
+              992: {
+                slidesPerView: 2,
+              },
+              1024: {
+                slidesPerView: 2,
+              },
+            }
+          }
+        );
+        var swiperInstance = new Swiper(carouselContainer, $.extend({
+          navigation: {
+            nextEl: carouselNextButton,
+            prevEl: carouselPrevButton,
+          }
+        }, params
+        )
+        );
+        swiperInstance.controller.control = swiperInstance2;
+        swiperInstance.on("slideChange", function () {
+          var slideIndex = swiperInstance.activeIndex;
+          for (i = 0; i < swiperCarousels.length; i++) {
+            $(carouselContainer).closest(moduleClassName).addClass('active-swiper');
+            if (slideIndex == 0) {
+              $(carouselContainer).closest(moduleClassName).removeClass('active-swiper');
+            }
+          }
+        });
+      })
+    }, 10)
+  }
+
+  function vsmTimelineSingleSwipers(r, m, s, n) {
+    setTimeout(function () {
+      // Swiper module name
+      // var moduleClassName = "div[data-section]"+" ";// Leave as global or specific module class name
+      // var swiperContainerClass = ".swiper-container";
+      var moduleClassName = m + " ";
+      var swiperContainerClass = s;
+      var destroySwiper = r;
+      let componentWrapper = swiperContainerClass.replace(".swiper-container", "").replace(/[.]+/g, "-").substring(1);
+      let outerContainer = swiperContainerClass.replace(/[.]+/g, "-").substring(1);
+      // Destroy swipers
+      if (destroySwiper === "update") {
+        $(moduleClassName + swiperContainerClass).each(function () {
+          this.swiper.destroy();
+          console.log("Swiper destroyed before reinitialised: " + moduleClassName + swiperContainerClass)
+        })
+      }
+      // Setup new swipers
+      const swiperCarousels = document.querySelectorAll(moduleClassName + swiperContainerClass);
+      swiperCarousels.forEach((carouselContainer, index) => {
+        if ($(carouselContainer).closest(moduleClassName).find(swiperContainerClass).data('slide-options')) {
+          var slideoptions = $(carouselContainer).closest(moduleClassName).find(swiperContainerClass).data('slide-options');
+        } else {
+          var slideoptions = ['false', 'false']
+        }
+        var params = n;
+        const bullet = $(carouselContainer).closest(moduleClassName).find(".swiper-slide").map(function () {
+          return this.dataset.name;
+        }).get();
+        const carouselPagination = carouselContainer.closest(moduleClassName).querySelector(
+          ".swiper-pagination"
+        );
+        const carouselPrevButton =
+          carouselContainer.closest(moduleClassName).querySelector(
+            ".swiper-button-prev"
+          );
+        const carouselNextButton =
+          carouselContainer.closest(moduleClassName).querySelector(
+            ".swiper-button-next"
+          );
+        carouselContainer.closest(moduleClassName).querySelector(
+          ".component-wrapper"
+        ).classList.add('outer-' + componentWrapper + "-" + index)
+        carouselContainer.closest(moduleClassName).querySelector(
+          swiperContainerClass
+        ).classList.add(outerContainer + "-" + index)
+        // init new swiper
+        var swiperInstance = new Swiper(carouselContainer, $.extend({
+          loop: JSON.parse(slideoptions[1]),
+          autoplay: JSON.parse(slideoptions[0]),
+          pagination: {
+            el: carouselPagination,
+            clickable: true,
+            dynamicMainBullets: 1,
+            dynamicBullets: true,
+            renderBullet: function (index, className) {
+              return '<span class="' + className + '">' + "<span>" + (bullet[index]) + "</span>" + '</span>';
+            },
+          },
+          navigation: {
+            nextEl: carouselNextButton,
+            prevEl: carouselPrevButton,
+          }
+        }, params
+        )
+        );
+        swiperInstance.on("slideChange", function () {
+          var slideIndex = swiperInstance.activeIndex;
+          for (i = 0; i < swiperCarousels.length; i++) {
+            $(carouselContainer).closest(moduleClassName).addClass('active-swiper');
+            if (slideIndex == 0) {
+              $(carouselContainer).closest(moduleClassName).removeClass('active-swiper');
+            }
+          }
+        });
+      })
+    }, 10)
+  }
+
+  function vsmSwipers(r, m, s, n) {
+    setTimeout(function () {
+      // Swiper module name
+      // var moduleClassName = "div[data-section]"+" ";// Leave as global or specific module class name
+      // var swiperContainerClass = ".swiper-container";
+      var moduleClassName = m + " ";
+      var swiperContainerClass = s;
+      var destroySwiper = r;
+      let componentWrapper = swiperContainerClass.replace(".swiper-container", "").replace(/[.]+/g, "-").substring(1);
+      let outerContainer = swiperContainerClass.replace(/[.]+/g, "-").substring(1);
+      // Destroy swipers
+      if (destroySwiper === "update") {
+        $(moduleClassName + swiperContainerClass).each(function () {
+          this.swiper.destroy();
+          console.log("Swiper destroyed before reinitialised: " + moduleClassName + swiperContainerClass)
+        })
+      }
+      // Setup new swipers
+      const swiperCarousels = document.querySelectorAll(moduleClassName + swiperContainerClass);
+      swiperCarousels.forEach((carouselContainer, index) => {
+        if ($(carouselContainer).closest(moduleClassName).find(swiperContainerClass).data('slide-options')) {
+          var slideoptions = $(carouselContainer).closest(moduleClassName).find(swiperContainerClass).data('slide-options');
+        } else {
+          var slideoptions = ['false', 'false']
+        }
+        var params = n;
+        const bullet = $(carouselContainer).closest(moduleClassName).find(".swiper-slide").map(function () {
+          return this.dataset.name;
+        }).get();
+        const carouselPagination = carouselContainer.closest(moduleClassName).querySelector(
+          ".swiper-pagination"
+        );
+        const carouselPrevButton =
+          carouselContainer.closest(moduleClassName).querySelector(
+            ".swiper-button-prev"
+          );
+        const carouselNextButton =
+          carouselContainer.closest(moduleClassName).querySelector(
+            ".swiper-button-next"
+          );
+        carouselContainer.closest(moduleClassName).querySelector(
+          ".component-wrapper"
+        ).classList.add('outer-' + componentWrapper + "-" + index)
+        carouselContainer.closest(moduleClassName).querySelector(
+          swiperContainerClass
+        ).classList.add(outerContainer + "-" + index)
+        // init new swiper
+        var swiperInstance = new Swiper(carouselContainer, $.extend({
+          loop: JSON.parse(slideoptions[1]),
+          autoplay: JSON.parse(slideoptions[0]),
+          pagination: {
+            el: carouselPagination,
+            clickable: true,
+            renderBullet: function (index, className) {
+              return '<span class="' + className + '">' + "<span>" + (bullet[index]) + "</span>" + '</span>';
+            },
+          },
+          navigation: {
+            nextEl: carouselNextButton,
+            prevEl: carouselPrevButton,
+          }
+        }, params
+        )
+        );
+        swiperInstance.on("slideChange", function () {
+          var slideIndex = swiperInstance.activeIndex;
+          for (i = 0; i < swiperCarousels.length; i++) {
+            $(carouselContainer).closest(moduleClassName).addClass('active-swiper');
+            if (slideIndex == 0) {
+              $(carouselContainer).closest(moduleClassName).removeClass('active-swiper');
+            }
+          }
+        });
+      })
+    }, 1000)
+  }
+  // For Legacy Job Carousel Modules
+  function vsmswiper() {
+    if ($(".isliquidmodule .swiper-container").length || $(".vsm-job-carousel .swiper-container").length) {
+      console.log("detected isliquidmodule carousel")
+      waitForElm('.isliquidmodule').then((elm) => {
+        console.log('Element is ready');
+    
+    // setTimeout(function () {
+        // vsmSwipers("update", "div.vsm-job-carousel", ".swiper-container", triple);
+        
+        vsmSwipers("update", ".isliquidmodule", ".single-slide.swiper-container", single);
+        vsmSwipers("update", ".isliquidmodule", ".double-slides.swiper-container", double);
+        vsmSwipers("update", ".isliquidmodule", ".triple-slides.swiper-container", triple);
+        vsmSwipers("update", ".isliquidmodule", ".quadruple-slides.swiper-container", quadruple);
+        vsmSwipers("update", ".isliquidmodule", ".variable-slides.swiper-container", variable);
+        vsmSwipers("update", ".vsm-multiple-col-cta", ".triple-slides.swiper-container", tripleNoSpace);
+
+      // }, 1000)
+});
+      
+
+    }
+  }
+
+  function vsmplyr() {
+    const options = {
+      settings: ['captions', 'quality', 'speed'],
+      volume: 0.5,
+      hideControls: false, captions: { active: false },
+    };
+    const options2 = {
+      settings: ['captions', 'quality', 'speed', 'muted', "autoplay"],
+      volume: 0.5,
+      hideControls: false, captions: { active: false },
+      autoplay: true,
+      muted: true,
+    };
+    if ($(".plyr").length > 0 && $(".plyr iframe").attr('src') != "") {
+      const players = Array.from(document.querySelectorAll('.plyr')).map(player => new Plyr(player, options));
+      players.forEach(player => {
+        player.toggleControls(false);
+        player.on('play', event => {
+          player.toggleControls(false);
+        });
+      });
+    }
+
+    if ($(".plyr-control").length > 0 && $(".plyr iframe").attr('src') != "") {
+      const playersControl = Array.from(document.querySelectorAll('.plyr-control')).map(player => new Plyr(player, options));
+      playersControl.forEach(player => {
+        player.toggleControls(false);
+        player.on('play', event => {
+          player.toggleControls(true);
+        });
+      });
+    }
+
+    if ($(".plyr-autoplay").length > 0 && $(".plyr iframe").attr('src') != "") {
+      const playersControl = Array.from(document.querySelectorAll('.plyr-autoplay')).map(player => new Plyr(player, options2));
+      playersControl.forEach(player => {
+        player.toggleControls(false);
+        player.on('play', event => {
+          player.toggleControls(false);
+        });
+
+      });
+    }
+
+  }
+
+
+
+  function vsmAOS() {
+    AOS.init({
+      easing: 'ease-out-back',
+      duration: 1000,
+
+      // offset: 120,
+    });
+    let scrollRef = 0;
+
+    window.addEventListener('scroll', function () {
+      // increase value up to 10, then refresh AOS
+      scrollRef <= 10 ? scrollRef++ : AOS.refresh();
+    });
+  }
+
+  function vsmInputFile() {
+    bsCustomFileInput.init()
+  }
+
+  function vsmSelectOption() {
+    $('.selectpicker').selectpicker();
+  }
+
+  function vsmFilterToggle() {
+    $('.toggle-filters').on("click", function (e) {
+      $(this).toggleClass('toggle-open').closest('.job-search-filters').find('.toggle-container').toggleClass('toggle-open');
+    })
+  }
+
+  function vsmTopSearchBar() {
+    $('.vsm-top .search-bar-btn a').on("click", function (e) {
+      e.preventDefault();
+      $(this).closest('.navigation').toggleClass('search-open');
+      var height = $('.vsm-top').outerHeight();
+      if ($('.vsm-responsive-nav').length > 0 && $('.vsm-top').length > 0) {
+
+        $('.vsm-responsive-nav').css({ "top": height })
+      }
+    });
+  }
+
+  function vsmBurgerToggle() {
+    if ($(".vsm-mobile-menu").length > 0) {
+      $('.vsm-top .burger-menu, .vsm-mobile-menu .burger-menu').on("click", function (e) {
+        e.preventDefault();
+        $('body').toggleClass('mobile-menu-open');
+      });
+    }
+
+    if ($('#mobile-menu').length > 0) {
+
+      document.addEventListener("DOMContentLoaded", function () {
+
+        const menuElement = document.getElementById('mobile-menu');
+
+        const menu = new SlideMenu(document.getElementById('mobile-menu'), {
+          showBackLink: true,
+          backLinkBefore: '<i class="fas fa-arrow-left"></i>',
+          submenuLinkAfter: ' <i class="fas fa-arrow-right"></i>',
+
+        });
+
+
+
+
+        menuElement.addEventListener('sm.open', function () {
+          rePadNav()
+          $(window).resize(rePadNav);
+          function rePadNav() {
+            var height = $('.vsm-top').outerHeight();
+            if ($('.vsm-responsive-nav').length > 0 || $('.vsm-top').length > 0) {
+              $('.slide-menu').css({ "padding-top": height })
+              // $('.vsm-top').addClass( "fixed" )
+            }
+          }
+
+          $('body, .content-wrapper, .slide-menu__control').addClass('menu-open');
+          $(".content-wrapper").append('<div class="menu-backdrop slide-menu__control" data-target="mobile-menu" data-action="close"></div>');
+          setTimeout(function () {
+            $(".menu-backdrop").addClass('show');
+          }, 1);
+        });
+
+        menuElement.addEventListener('sm.close', function () {
+          $('body, .content-wrapper, .slide-menu__control').removeClass('menu-open');
+          $('.menu-backdrop').removeClass('show');
+          // $('.vsm-top').removeClass( "fixed" )
+
+          setTimeout(function () {
+            $(".menu-backdrop").remove();
+          }, 300);
+        });
+
+      });
+    }
+  }
+
+  function vsmVideoModal() {
+    var triggerOpen = $("body").find('[data-video]');
+    triggerOpen.on('click', function () {
+      var theModal = $(this).data("bs-target"),
+        videoSRC = $(this).attr("data-video"),
+        videoSRCauto = videoSRC + "?autoplay=1";
+      $(theModal + ' iframe').attr('src', videoSRCauto);
+      $('.modal-backdrop').on('click', function () {
+        $('#videoModal iframe').attr('src', "");
+      });
+    });
+  }
+
+
+  function vsmResponsiveNavLinks() {
+    if ($('.displayed-nav').length > 0) {
+      function collect() {
+        $(".displayed-nav").each(function (index) {
+          var noItems = 0;
+          var fitCount = 0, varWidth = 0;
+          var zIndex = 90 - index;
+          var $menu = $(this);
+          $menu.closest('.vsm-responsive-nav').css({ "z-index": zIndex });
+          var elemWidth = $menu.width();
+          var ctr = $menu.children().length;
+          $menu.children().addClass('display').removeClass('hide');
+          $menu.children().each(function () {
+            varWidth += $(this).outerWidth();
+            // console.log(varWidth, elemWidth);       
+            // console.log(fitCount);          
+            if (varWidth < elemWidth) {
+              fitCount++
+            }
+          });
+          var $moreNav = $menu.next();
+          var $submenu = $moreNav.find(".submenu");
+          $menu.children(":lt(" + fitCount + ")").addClass('display').removeClass('hide');
+          var $collectedSet = $menu.children(":gt(" + fitCount + "), :eq(" + fitCount + ")");
+          $submenu.empty().append($collectedSet.clone());
+          $collectedSet.addClass('hide').removeClass('display');
+          if ($submenu.children().length > 0) {
+            $moreNav.show()
+          }
+          else {
+            $moreNav.hide()
+          }
+        })
+      }
+      setTimeout(collect, 1000)
+
+      $(window).resize(collect);
+    }
+
+  }
+
+  function vsmCheckHero() {
+    if ($(".main").children().first().is('.vsm-hero-slider') || $(".main").children().first().is('.vsm-default-single-media-hero') || $(".main").children().first().is('.vsm-default-internal-hero') || $(".main").children().first().is('.vsm-default-internal-profile-hero') || $(".main").children().first().is('.vsm-form-hero')) {
+      $(".vsm-top").addClass('switch-fixed');
+    }
+  }
+
+  function vsmDoubleNav() {
+    rePositionNav()
+    $(window).resize(rePositionNav);
+    function rePositionNav() {
+      var height = $('.vsm-top').outerHeight();
+      var height2 = $('.vsm-responsive-nav').outerHeight();
+      if ($('.vsm-responsive-nav').length > 0 && $('.vsm-top').length > 0) {
+        $('.vsm-responsive-nav').css({ "top": height })
+        $('.vsm-responsive-nav + .vsm-responsive-nav').css({ "top": height + height2 })
+      }
+    }
+  }
+
+  function vsmScrollPanel() {
+    if ($(".scroll-panel").length > 0) {
+      $(window).scroll(function () {
+
+        // selectors
+        var $window = $(window),
+          $body = $('body'),
+          $panel = $('.scroll-panel');
+
+        // Change 33% earlier than scroll position so colour is there when you arrive.
+        var scroll = $window.scrollTop() + ($window.height() / 3);
+
+        $panel.each(function () {
+          var $this = $(this);
+
+          // if position is within range of this panel.
+          // So position of (position of top of div <= scroll position) && (position of bottom of div > scroll position).
+          // Remember we set the scroll to 33% earlier in scroll var.
+          if ($this.position().top <= scroll && $this.position().top + $this.height() > scroll) {
+
+            // Remove all classes on body with color-
+            $body.removeClass(function (index, css) {
+              return (css.match(/(^|\s)color-\S+/g) || []).join(' ');
+            });
+
+            // Add class of currently active div
+            $body.addClass('color-' + $(this).data('color'));
+          }
+        });
+
+      }).scroll();
+    }
+  }
+
+  function vsmHideMenu() {
+    if ($("body.auto-hide-menu").length > 0) {
+      var prev = 0;
+      var $window = $(window);
+      var header = $('header')
+      var nav = $('.vsm-top');
+      var mNav = $('.main > .vsm-responsive-nav');
+      // offSet = $('.vsm-top').height();
+
+      $window.on('scroll', function () {
+        offSet = $('.vsm-top').height();
+        console.log(offSet)
+        var scrollTop = $window.scrollTop();
+        if (scrollTop > offSet) {
+          header.toggleClass('hidden', scrollTop > prev);
+          nav.toggleClass('hidden', scrollTop > prev);
+          mNav.toggleClass('hidden', scrollTop > prev);
+          prev = scrollTop;
+          $('header').css({ "min-height": offSet })
+          mNav.css({ "top": offSet })
+          // console.log(prev,scrollTop)
+        }
+      });
+    }
+  }
+
+  function vsmGetTopBarHeight() {
+    if ($("body.fixed-bar-position").length > 0) {
+      function checkHeight() {
+        var header = $('.vsm-top').outerHeight();
+        $('header').css({ "min-height": header + "px" })
+      }
+      setTimeout(function () {
+        checkHeight();
+      }, 800);
+      $(window).on('resize', checkHeight);
+    }
+  }
+
+  function vsmHozScroll() {
+    if ($("body.side-scroll").length > 0) {
+      $("body").mousewheel(function (event, delta) {
+        console.log('ww')
+        this.scrollLeft -= (delta);
+        event.preventDefault();
+      });
+    }
+  }
+
+  function infiniteHozScroll() {
+    if ($('.vsm-infinite-horizonal-scroll').length > 0) {
+      $('.vsm-infinite-horizonal-scroll').each(function () {
+        var original = $(this).find('.original').html();
+        var clone = $(original).clone();
+        //$(clone).wrapAll("<span class='clone'></span>").parent().insertBefore('.original');
+        $(clone).wrapAll("<span class='clone'></span>").parent().insertAfter('.original');
+      })
+    }
+  }
+
+  function toggleSearchFilters() {
+    if ($('.vsm-job-search-results-listings').length > 0) {
+      $('.job-search-filters .filter .label').addClass('toggler');
+      $(document).on('click', '.toggler', function () {
+        $(this).toggleClass('collapsed');
+        $(this).nextAll("div").toggle();
+      })
+    }
+  }
+
+  function vsmMultipleColCta(){
+    if($(".vsm-multiple-col-cta").length){
+      var parent = ".vsm-multiple-col-cta";
+      $(document).on("click", parent+ " .swiper-navigation" ,function(){
+        var target = $(this).closest(parent).find(".swiper-slide-active").attr('data-target-background')
+        $(this).closest(parent).find(".background").css('background-image', "url("+target+")")
+        $(this).closest(parent).find(".swiper-slide").removeClass("active")
+        $(this).closest(parent).find(".swiper-slide-active").addClass("active")
+      });
+      $(document).on("mouseenter",'[data-target-background]',function(){
+        var target = $(this).attr('data-target-background');
+        $(this).closest(parent).find("[data-target-background]").removeClass("active")
+        $(this).closest(parent).find(".background").css('background-image', "url("+target+")")
+         $(this).addClass("active")
+      });
+      
+    }
+  }
+
+  function vsmMultiForms(){
+    if($(".vsm-multi-step-form").length){
+    $('.vsm-multi-step-form .nav-link').on("click",function(){
+      var parent = $(this).closest(".tabbed-forms");
+      
+      $(this).parent().nextAll().removeClass('show');
+      parent.find('.sub-nav a').removeClass('active')
+      parent.next().find(".nav-link").removeClass('active');
+      $(this).addClass('active');
+      parent.addClass('show');
+    })
+    $(".vsm-multi-step-form .sub-nav a").on("click",function(){
+      var parent = $(this).closest(".tabbed-forms");
+      
+      var setMainNav = $(this).data('bs-target');
+      console.log(parent,setMainNav )
+      parent.find('.sub-nav a').removeClass('active');
+      $(this).addClass('active');
+      parent.find('.nav-link').removeClass('active');
+      parent.find("[data-bs-target='"+setMainNav+"']").parent().addClass('show');
+      parent.find("[data-bs-target='"+setMainNav+"']").addClass('active');
+    })
+    $(".vsm-multi-step-form div.sub-nav a").on("click",function(){
+      var parent = $(this).closest(".tabbed-forms");
+      var setMainNav = $(this).data('bs-target');
+      parent.find('a').removeClass('active');
+      $(this).addClass('active');
+      parent.find('.nav-link a').removeClass('active');
+      parent.find('.nav-item').removeClass('show');
+      parent.find('.nav-item:nth-child(1)').addClass('show');
+      parent.find("[data-bs-target='"+setMainNav+"']").parent().addClass('show');
+      parent.find("[data-bs-target='"+setMainNav+"']").addClass('active');
+    })
+  }
+}
+
+  function vsmTabbedContent(){
+    if($(".vsm-tabbed-content").length){
+      $(".vsm-tabbed-content").each(function(){
+        $(this).find(".nav li:first-child a").addClass('active');
+        $(this).find(".tab-content .tab-pane:first-child").addClass('active');
+      })
+    }
+  }
+
+  function vsmGoogleMaps(){
+    
+
+    if($('.map_canvas').length){
+      setTimeout(function () {
+        
+      
+            $maps = $('.map_canvas');
+            $maps.each(function(index, Element) {
+            $infotext = $(Element).children('.infotext');
+            var addresses = new Array();
+            $infotext.each(function(){
+                addresses.push([$(this).find(".location").text(), $(this).find(".address").text(),$(this).find(".postcode-zip").text(),$(this).find(".country").text(), $(this).find(".phone").text(), $(this).find(".email").text(), $(this).find(".zoom").text(), $(this).find(".marker").text()]);
+            });
+            //  console.log(addresses[0][0],addresses[0][1],addresses[0][2],addresses[0][3])
+  var options = {
+              'zoom': 9,
+              'mapTypeId': google.maps.MapTypeId.ROADMAP,
+              'styles': [{ "featureType": "water", "elementType": "geometry", "stylers": [{ "color": "#e9e9e9" }, { "lightness": 17 }] }, { "featureType": "landscape", "elementType": "geometry", "stylers": [{ "color": "#f5f5f5" }, { "lightness": 20 }] }, { "featureType": "road.highway", "elementType": "geometry.fill", "stylers": [{ "color": "#ffffff" }, { "lightness": 17 }] }, { "featureType": "road.highway", "elementType": "geometry.stroke", "stylers": [{ "color": "#ffffff" }, { "lightness": 29 }, { "weight": 0.2 }] }, { "featureType": "road.arterial", "elementType": "geometry", "stylers": [{ "color": "#ffffff" }, { "lightness": 18 }] }, { "featureType": "road.local", "elementType": "geometry", "stylers": [{ "color": "#ffffff" }, { "lightness": 16 }] }, { "featureType": "poi", "elementType": "geometry", "stylers": [{ "color": "#f5f5f5" }, { "lightness": 21 }] }, { "featureType": "poi.park", "elementType": "geometry", "stylers": [{ "color": "#dedede" }, { "lightness": 21 }] }, { "elementType": "labels.text.stroke", "stylers": [{ "visibility": "on" }, { "color": "#ffffff" }, { "lightness": 16 }] }, { "elementType": "labels.text.fill", "stylers": [{ "saturation": 36 }, { "color": "#333333" }, { "lightness": 40 }] }, { "elementType": "labels.icon", "stylers": [{ "visibility": "off" }] }, { "featureType": "transit", "elementType": "geometry", "stylers": [{ "color": "#f2f2f2" }, { "lightness": 19 }] }, { "featureType": "administrative", "elementType": "geometry.fill", "stylers": [{ "color": "#fefefe" }, { "lightness": 20 }] }, { "featureType": "administrative", "elementType": "geometry.stroke", "stylers": [{ "color": "#fefefe" }, { "lightness": 17 }, { "weight": 1.2 }] }],
+          };
+          var map = new google.maps.Map(Element, options);
+          var geocoder = new google.maps.Geocoder();
+          var bounds = new google.maps.LatLngBounds();
+          var marker;
+          var infowindow = new google.maps.InfoWindow();
+          var locations =  addresses;
+            for (i = 0; i < locations.length; i++) {
+              codeAddress(locations[i]);
+            }
+          geocoder = new google.maps.Geocoder();
+            function codeAddress(location) {
+              geocoder.geocode({
+                 'address': location[0]+location[1]+location[2]+location[3]
+              }, function (results, status) {
+                  if (status == google.maps.GeocoderStatus.OK) {
+                      map.setCenter(results[0].geometry.location);
+                      var svgMarker = {
+                        path: "M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0zM192 272c44.183 0 80-35.817 80-80s-35.817-80-80-80-80 35.817-80 80 35.817 80 80 80z",
+                        fillColor: location[7], 
+                        fillOpacity: 1,
+                        strokeWeight: 0,
+                        rotation: 0,
+                        scale: 0.05,
+                        anchor: new google.maps.Point(15, 30),
+                    };
+                      var marker = new google.maps.Marker({
+                          map: map,
+                          icon: svgMarker,
+                          title: location[0],
+                          address: location[1]+location[2]+location[3],
+                          position: results[0].geometry.location
+                      });
+                      if(locations.length > 1){
+                        bounds.extend(marker.getPosition());
+                        map.fitBounds(bounds);
+                      }
+                      var contents = '<p class="map-info"><strong>'+location[0]+'</strong>'+'<br>'+ location[1]+'<br>'+location[2]+'<br>'+location[3]+'<br><a href="tel:'+location[4]+'">'+location[4]+'</a><br><a href="mailto:'+location[5]+'">'+location[5]+'</a></p>'
+                      google.maps.event.addListener(marker, 'click', (function (marker, location) {
+                          return function () {
+                            var content = contents;
+                            infowindow.setContent(content);
+                            infowindow.open(map, marker);
+                          };
+                      })(marker, location));
+                  } else {
+                      console.log("Geocode was not successful for the following reason: " + status);
+                  }
+              });
+          }
+        });
+      }, 1000);
+
+      }
+    
+  }
+ 
+
+  // explicitly return public methods when this object is instantiated
+  return {
+    vsmscrollUp: vsmscrollUp,
+    vsmscrollTo: vsmscrollTo,
+    vsmlaxScroll: vsmlaxScroll,
+    vsmDoubleNav: vsmDoubleNav,
+    vsmplyr: vsmplyr,
+    vsmAOS: vsmAOS,
+    vsmInputFile: vsmInputFile,
+    vsmSelectOption: vsmSelectOption,
+    vsmFilterToggle: vsmFilterToggle,
+    vsmTopSearchBar: vsmTopSearchBar,
+    vsmBurgerToggle: vsmBurgerToggle,
+    vsmVideoModal: vsmVideoModal,
+    vsmResponsiveNavLinks: vsmResponsiveNavLinks,
+    vsmCheckHero: vsmCheckHero,
+    vsmScrollPanel: vsmScrollPanel,
+    vsmHideMenu: vsmHideMenu,
+    vsmGetTopBarHeight: vsmGetTopBarHeight,
+    vsmHozScroll: vsmHozScroll,
+    infiniteHozScroll: infiniteHozScroll,
+    toggleSearchFilters: toggleSearchFilters,
+    destroySwipers: destroySwipers,
+    vsmSwipers: vsmSwipers,
+    vsmswiper: vsmswiper,
+    vsmTimelineHozSwipers: vsmTimelineHozSwipers,
+    vsmTimelineSingleSwipers: vsmTimelineSingleSwipers,
+    vsmMultipleColCta:vsmMultipleColCta,
+    vsmMultiForms:vsmMultiForms,
+    vsmTabbedContent:vsmTabbedContent,
+    vsmGoogleMaps:vsmGoogleMaps,
+
+    //  someOtherMethod: myOtherMethod
+  };
+})(window);
+
+
+// Standard Variables for Swipers
+var single = {
+  speed: 1000,
+  spaceBetween: 30,
+  slidesPerView: 1,
+  breakpoints: {
+    640: { slidesPerView: 1, },
+    768: { slidesPerView: 1, },
+    992: { slidesPerView: 1, },
+    1024: { slidesPerView: 1, },
+  }
+}
+var double = {
+  speed: 1000,
+  spaceBetween: 30,
+  slidesPerView: 1,
+  breakpoints: {
+    640: { slidesPerView: 1, },
+    768: { slidesPerView: 2, },
+    992: { slidesPerView: 2, },
+    1024: { slidesPerView: 2, },
+  }
+}
+var triple = {
+  speed: 1000,
+  spaceBetween: 30,
+  slidesPerView: 1,
+  breakpoints: {
+    640: { slidesPerView: 1, },
+    768: { slidesPerView: 2, },
+    992: { slidesPerView: 3, },
+    1024: { slidesPerView: 3, },
+  }
+}
+var quadruple = {
+  speed: 1000,
+  spaceBetween: 30,
+  slidesPerView: 1,
+  breakpoints: {
+    640: { slidesPerView: 1, },
+    768: { slidesPerView: 2, },
+    992: { slidesPerView: 3, },
+    1024: { slidesPerView: 4, },
+  }
+}
+var singleLess = {
+  speed: 1000,
+  spaceBetween: 30,
+  slidesPerView: 1,
+  breakpoints: {
+    640: { slidesPerView: 1, },
+    768: { slidesPerView: 1.2, },
+    992: { slidesPerView: 1.2, },
+    1024: { slidesPerView: 1.2, },
+  }
+}
+var doubleRowSlides = {
+  slidesPerColumn: 2,
+  slidesPerGroup: 4,
+  slidesPerColumnFill: 'row',
+  resizeObserver: true,
+  autoplayDisableOnInteraction: true,
+  speed: 1000,
+  observer: true,
+  observeSlideChildren: true,
+  observeParents: true,
+  watchOverflow: true,
+  watchSlidesProgress: true,
+  watchSlidesVisibility: true,
+  roundLengths: true,
+  noSwiping: true,
+  breakpoints: {
+    640: {
+      slidesPerView: 2,
+      slidesPerColumn: 2,
+      slidesPerGroup: 4,
+    },
+    768: {
+      slidesPerView: 3,
+      slidesPerColumn: 2,
+      slidesPerGroup: 6,
+    },
+    992: {
+      slidesPerView: 4,
+      slidesPerColumn: 2,
+      slidesPerGroup: 8,
+    },
+    1024: {
+      loop: false,
+      slidesPerColumnFill: 'row',
+      slidesPerView: 5,
+      slidesPerColumn: 2,
+      slidesPerGroup: 10,
+    },
+  }
+}
+var variable = {
+  speed: 1000,
+  spaceBetween: 30,
+  slidesPerView: 1,
+  breakpoints: {
+    640: { slidesPerView: 1, },
+    768: { slidesPerView: 2, },
+    992: { slidesPerView: 3, },
+    1024: { slidesPerView: 3, },
+  }
+}
+
+var tripleNoSpace = {
+  speed: 1000,
+  spaceBetween: 0,
+  slidesPerView: 1,
+  breakpoints: {
+    640: { slidesPerView: 1, spaceBetween: 0,},
+    768: { slidesPerView: 2, spaceBetween: 0,},
+    992: { slidesPerView: 3, spaceBetween: 0,},
+    1024: { slidesPerView: 3,spaceBetween: 0, },
+  }
+}
+
+var central = {
+  centeredSlides: true,
+  speed: 1000,
+  spaceBetween: 30,
+  slidesPerView: 1,
+  breakpoints: {
+    640: { slidesPerView: 1, },
+    768: { slidesPerView: 1, },
+    992: { slidesPerView: 1, },
+    1024: { slidesPerView: 2.5, },
+  }
+}
+
+var overlap = {
+  centeredSlides: false,
+  speed: 1000,
+  spaceBetween: 30,
+  slidesPerView: 1,
+  breakpoints: {
+    640: { slidesPerView: 1, },
+    768: { slidesPerView: 1, },
+    992: { slidesPerView: 1, },
+    1024: { slidesPerView: 1, },
+  }
+}
+
+
+
+var progressBar = {
+  effect: 'fade',
+  fadeEffect: {
+    crossFade: true
+  },
+  watchOverflow: true,
+  watchSlidesProgress: true,
+  watchSlidesVisibility: true,
+  roundLengths: true,
+  preloadImages: true,
+  pagination: {
+    el: '.swiper-pagination',
+    clickable: true,
+    type: 'progressbar',
+  },
+  on: {
+    init: function () {
+      var currentVideo = $(" [data-swiper-slide-index=" + this.realIndex + "]").find("video");
+      currentVideo.trigger('play');
+
+
+    },
+    transitionStart: function () {
+      var sliderVideos = $(" .swiper-slide video");
+      sliderVideos.each(function (index) {
+        this.currentTime = 0;
+        this.pause();
+      });
+      var prevVideo = $("  .swiper-slide").find("video");
+      var currentVideo = $("  .swiper-slide-active").find("video");
+      prevVideo.trigger('stop');
+      currentVideo.trigger('play');
+    }
+  },
+}
+var bullets = {
+  effect: 'fade',
+  fadeEffect: {
+    crossFade: true
+  },
+  watchOverflow: true,
+  watchSlidesProgress: true,
+  watchSlidesVisibility: true,
+  roundLengths: true,
+  preloadImages: true,
+
+  on: {
+    init: function () {
+      var currentVideo = $(" [data-swiper-slide-index=" + this.realIndex + "]").find("video");
+      currentVideo.trigger('play');
+    },
+    transitionStart: function () {
+      var sliderVideos = $(" .swiper-slide video");
+      sliderVideos.each(function (index) {
+        this.currentTime = 0;
+        this.pause();
+      });
+      var prevVideo = $("  .swiper-slide").find("video");
+      var currentVideo = $("  .swiper-slide-active").find("video");
+      prevVideo.trigger('stop');
+      currentVideo.trigger('play');
+    }
+  },
+}
+
+var timelineAlt = {
+  slidesPerView: 2,
+  slidesPergroup: 3,
+  spaceBetween: 30,
+  loop: false,
+  updateOnImagesReady: true,
+  preloadImages: false,
+  lazyLoading: true,
+  breakpoints: {
+    640: {
+      slidesPerView: 1,
+    },
+    768: {
+      slidesPerView: 1,
+    },
+    992: {
+      slidesPerView: 2,
+    },
+    1024: {
+      slidesPerView: 3,
+    },
+  }
+}
+
+var timelineVertical = {
+  direction: 'vertical',
+  slidesPerView: 'auto',
+  spaceBetween: 0,
+  autoHeight: true,
+  freeMode: true,
+  allowTouchMove: true,
+  grabCursor: true,
+  loop: false,
+  updateOnImagesReady: true,
+  preloadImages: false,
+  lazyLoading: true,
+}
+
+var timelineSingle = {
+  direction: 'vertical',
+  slidesPerView: 1,
+  spaceBetween: 0,
+  autoHeight: true,
+  freeMode: false,
+  allowTouchMove: true,
+  grabCursor: false,
+  loop: false,
+  updateOnImagesReady: true,
+  preloadImages: false,
+  // Enable lazy loading
+  lazyLoading: true,
+  observer: true,
+  resizeObserver: true,
+
+  breakpoints: {
+    640: {
+      slidesPerView: 'auto',
+    },
+
+  }
+}
+
+var timelineHoz = {
+  slidesPerView: 2,
+  spaceBetween: 0,
+  grabCursor: true,
+  loop: false,
+  freeMode: true,
+  freeModeSticky: true,
+  updateOnImagesReady: true,
+  watchSlidesVisibility: true,
+  watchSlidesProgress: true,
+  preloadImages: false,
+  lazyLoading: true,
+  breakpoints: {
+    320: {
+      slidesPerView: 1,
+    },
+    768: {
+      slidesPerView: 2,
+    },
+    992: {
+      slidesPerView: 2,
+    },
+    1024: {
+      slidesPerView: 2,
+    },
+  }
+}
+
+var doubleRow = {
+  slidesPerView: 2,
+                slidesPerColumn: 2,
+                slidesPerGroup: 2,
+                slidesPerColumnFill: 'row',
+                resizeObserver: true,
+                noSwiping: true,
+                freeMode: {
+                  enabled: false,
+                  sticky: true,
+                },
+                breakpoints: {
+                  640: {
+                    slidesPerView: 2,
+                    slidesPerColumn: 2,
+                  },
+                  768: {
+                    slidesPerView: 2,
+                    slidesPerColumn: 2,
+                  },
+                  992: {
+                    slidesPerView: 3,
+                    slidesPerColumn: 2,
+                  },
+                  1024: {
+                    slidesPerView: 3,
+                    slidesPerColumn: 2,
+                  },
+                },
+}
+
+
+
+//  usage
+vsmsite.vsmscrollUp();
+vsmsite.vsmscrollTo();
+vsmsite.vsmlaxScroll();
+vsmsite.vsmDoubleNav();
+vsmsite.vsmplyr();
+vsmsite.vsmAOS();
+vsmsite.vsmInputFile();
+vsmsite.vsmSelectOption();
+vsmsite.vsmFilterToggle();
+vsmsite.vsmTopSearchBar();
+vsmsite.vsmBurgerToggle();
+vsmsite.vsmVideoModal();
+vsmsite.vsmResponsiveNavLinks();
+vsmsite.vsmCheckHero();
+vsmsite.vsmScrollPanel();
+vsmsite.vsmHideMenu();
+vsmsite.vsmGetTopBarHeight();
+vsmsite.vsmHozScroll();
+vsmsite.infiniteHozScroll();
+vsmsite.toggleSearchFilters();
+vsmsite.vsmswiper();
+vsmsite.vsmMultipleColCta();
+vsmsite.vsmMultiForms();
+vsmsite.vsmTabbedContent();
+vsmsite.vsmGoogleMaps();
+
+vsmsite.vsmSwipers("init", "div[data-section]", ".single-slide.swiper-container", single);
+vsmsite.vsmSwipers("init", "div[data-section]", ".double-slides.swiper-container", double);
+vsmsite.vsmSwipers("init", "div[data-section]", ".triple-slides.swiper-container", triple);
+vsmsite.vsmSwipers("init", "div[data-section]", ".quadruple-slides.swiper-container", quadruple);
+vsmsite.vsmSwipers("init", "div[data-section]", ".variable-slides.swiper-container", variable);
+vsmsite.vsmSwipers("init", "div[data-section]", ".double-row-slides.swiper-container", doubleRow);
+vsmsite.vsmSwipers("init", "div[data-section]", ".single-less-slides.swiper-container", singleLess);
+vsmsite.vsmSwipers("init", "div[data-section]", ".single-central-slide.swiper-container", central);
+vsmsite.vsmSwipers("init", "div[data-section]", ".overlap-slides.swiper-container", overlap);
+vsmsite.vsmSwipers("init", "div[data-section]", ".hero-slider.bullets.swiper-container", bullets);
+vsmsite.vsmSwipers("init", "div[data-section]", ".hero-slider.progressbar.swiper-container", progressBar);
+vsmsite.vsmSwipers("init", "div[data-section]", ".timeline-vertical.swiper-container", timelineVertical);
+vsmsite.vsmSwipers("init", "div[data-section]", ".timeline-alt.swiper-container", timelineAlt);
+vsmsite.vsmTimelineSingleSwipers("init", ".vsm-timeline-single-view", ".timeline-single-view.swiper-container", timelineSingle)
+vsmsite.vsmTimelineHozSwipers("init", "div.vsm-timeline-horizontal", ".timeline.swiper-container", timelineHoz)
+
+
+
+// Global Carousels Calls
+// var moduleClassName = "div[data-section]"+" ";// Leave as global or specific module class name
+// var swiperContainerClass = ".swiper-container";
+
+//destroySliders("div[data-section]",".variable-slides.swiper-container")
+
+
+
+$(document).on('ready', function () {
+});
+
