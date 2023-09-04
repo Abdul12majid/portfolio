@@ -10,5 +10,6 @@ urlpatterns = [
     path('portfolio', views.portfolio, name='portfolio'),
     path('projects', views.project, name='projects'),
     path('my_cv', views.my_cv, name='my-cv'),
+    path('mail', views.mail, name='mail'),
     
 ]

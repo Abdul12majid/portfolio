@@ -1,5 +1,0 @@
-function copyrightYear(){
-    var year = new Date().getFullYear();
-    $('.vsm-default-signoff .copyright span.cyear').text(year);
-}
-copyrightYear();
