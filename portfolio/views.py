@@ -12,16 +12,6 @@ from django.conf import settings
 def home(request):
 	return render(request, "index.html", {})
 
-def mail(request):
-	receiver=['abdulmajidadeiza@gmail.com']
-	subject='Hello'
-	link='https://twitter.com/_Adeiza_'
-	message=f'Good day. Use the link below to get in touch. \n {link}'
-	sender=settings.EMAIL_HOST_USER
-	send_mail(subject, message, sender, receiver, fail_silently=True)
-	return render(request, "index.html", {})
-
-
 def about(request):
 	return render(request, 'index.html', {})
 
@@ -40,8 +30,8 @@ def contact_me(request):
 			your_email=form.cleaned_data['email']
 			receiver=[your_email]
 			subject='Hello'
-			link='https://wa.link/8wp2f2'
-			message=f'Good day {your_name}. Please click any of the link below to get in touch. \n\n {link}'
+			link='https://twitter.com/_Adeiza_'
+			message=f'Good day {your_name}. Please click any of the link below to get in touch.\n {link}'
 			db=Contact.objects.filter(email=form.cleaned_data['email']).exists()
 
 			sender=settings.EMAIL_HOST_USER
